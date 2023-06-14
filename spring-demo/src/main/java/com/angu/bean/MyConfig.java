@@ -7,12 +7,12 @@ import java.beans.BeanProperty;
 
 @Configuration
 public class MyConfig {
-	@Bean
+	@Bean("bean1")
 	public Bean1 getBean1() {
 		return new Bean1();
 	}
 
-	@Bean
+	@Bean("bean2")
 	public Bean2 getBean2() {
 		return new Bean2();
 	}
