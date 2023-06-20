@@ -16,6 +16,9 @@
 
 package org.springframework.jdbc.config;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +68,13 @@ public class InitializeDatabaseIntegrationTests {
 	@Test
 	public void testCreateEmbeddedDatabase() throws Exception {
 		context = new ClassPathXmlApplicationContext("org/springframework/jdbc/config/jdbc-initialize-config.xml");
+		DataSource bean = context.getBean(DataSource.class);
+		Connection connection = bean.getConnection();
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery("select * from T_TEST");
+		while (resultSet.next()){
+			System.out.println(resultSet.getString(1));
+		}
 		assertCorrectSetup(context.getBean("dataSource", DataSource.class));
 	}
 
@@ -115,7 +125,7 @@ public class InitializeDatabaseIntegrationTests {
 
 	private void assertCorrectSetup(DataSource dataSource) {
 		JdbcTemplate jt = new JdbcTemplate(dataSource);
-		assertThat(jt.queryForObject("select count(*) from T_TEST", Integer.class).intValue()).isEqualTo(1);
+		assertThat(jt.queryForObject("select count(*) from T_TEST", Integer.class).intValue()).isEqualTo(3);
 	}
 
 
